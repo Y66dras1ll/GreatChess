@@ -8,8 +8,27 @@ import com.chess.engine.logic.Pieces;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainFrame extends JFrame {
 
+/**
+ * Главное окно шахматного приложения "Великие шахматы".
+ * Служит корневым контейнером для всех компонентов пользовательского интерфейса.
+ * Инициализирует и связывает между собой панель доски, панель информации
+ * и игровой контроллер, обеспечивая их корректное взаимодействие.
+ * Отвечает за начальную настройку и компоновку основного интерфейса приложения.
+ *
+ * @see BoardPanel
+ * @see InfoPanel
+ * @see GameController
+ * @see Pieces
+ */
+public class MainFrame extends JFrame {
+    /**
+     * Конструктор главного окна приложения.
+     * Создает и инициализирует все компоненты интерфейса, устанавливает связи
+     * между ними и настраивает основные свойства окна.
+     *
+     * @param pieces объект, содержащий начальное состояние шахматных фигур и игровую логику
+     */
     public MainFrame(Pieces pieces) {
         setTitle("Великие шахматы");
         setBackground(Color.black);
@@ -33,6 +52,13 @@ public class MainFrame extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Точка входа в шахматное приложение.
+     * Создает начальное состояние игровых фигур и запускает главное окно приложения.
+     * Инициализирует игровой движок в режиме графического интерфейса.
+     *
+     * @param args аргументы командной строки (не используются)
+     */
     public static void main(String[] args) {
         Pieces pieces = new Pieces();
         pieces.setGUIGame(true);

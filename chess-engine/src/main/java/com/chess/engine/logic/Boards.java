@@ -46,13 +46,13 @@ public class Boards {
         Bishop bishopBc = new Bishop(COLOUR.B, new Coordinate('c', bRank));
         Bishop bishopBh = new Bishop(COLOUR.B, new Coordinate('h', bRank));
 
-        Giraffe GiraffeB = new Giraffe(COLOUR.B, new Coordinate('e', bRank));
+        Giraffe GiraffeB = new Giraffe(COLOUR.B, new Coordinate('f', bRank));
 
-        Queen queenB = new Queen(COLOUR.B, new Coordinate('g', bRank));
+        Queen queenB = new Queen(COLOUR.B, new Coordinate('d', bRank));
 
-        King kingB = new King(COLOUR.B, new Coordinate('f', bRank));
+        King kingB = new King(COLOUR.B, new Coordinate('e', bRank));
 
-        Vizar VizarB = new Vizar(COLOUR.B, new Coordinate('d', bRank));
+        Vizar VizarB = new Vizar(COLOUR.B, new Coordinate('g', bRank));
 
         WarCar WarCarBe = new WarCar(COLOUR.B, new Coordinate('e', pawnBRank));
         WarCar WarCarBf = new WarCar(COLOUR.B, new Coordinate('f', pawnBRank));

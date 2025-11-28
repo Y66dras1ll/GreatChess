@@ -143,7 +143,7 @@ public class ChessIO {
 
         String path = String.valueOf(saveFile);
         File gameFile = new File(path);
-        if (!gameFile.exists()) { //
+        if (!gameFile.exists()) {
             try {
                 FileWriter writer = new FileWriter(path);
                 writer.write(game);
