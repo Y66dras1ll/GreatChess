@@ -240,4 +240,15 @@ public abstract class Piece{
      * @return копия фигуры
      */
     public abstract Piece makeCopy();
+
+    /**
+     * Возвращает строковое представление фигуры для отображения на доске
+     * @return строка в формате "символ_фигуры + цвет"
+     */
+    public String toBoardString() {
+        if (name == ID.PAWN)
+            return "p" + colour.toSmallString();
+        else
+            return name.toString() + colour.toSmallString();
+    }
 }

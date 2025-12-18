@@ -4,6 +4,7 @@ import com.chess.engine.enums.COLOUR;
 import com.chess.engine.pieces.Piece;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Scanner;
 
 /**
  * Класс для работы с ходами фигур на шахматной доске
@@ -508,4 +509,28 @@ public class Move {
         return moves;
     }
 
+    /**
+     * Запрашивает у пользователя ход и возвращает начальную и конечную координаты
+     *
+     * @param sc Scanner для ввода данных
+     * @return массив из двух строк [начальная_координата, конечная_координата]
+     */
+    public static String[] moveQuery(Scanner sc) {
+        String[] move = new String[2];
+        boolean validFormat = false;
+
+        while (!validFormat) {
+            System.out.println("Введите фигуру и место ее назначения. Например, чтобы переместить фигуру с a2 на a3, напишите \"a2 a3\".");
+            String userInput = sc.nextLine();
+
+            if (userInput.length() > 7 || !userInput.contains(" ")) {
+                System.out.println("Инструкции для хода представлены в неправильном формате. Попробуйте еще раз!");
+            }
+            else {
+                move = userInput.split(" ");
+                validFormat = true;
+            }
+        }
+        return move;
+    }
 }

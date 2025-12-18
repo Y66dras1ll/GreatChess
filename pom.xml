@@ -17,6 +17,7 @@
         <module>chess-engine</module>
         <module>chess-gui</module>
         <module>chess-gui</module>
+        <module>chess-console</module>
     </modules>
 
     <properties>

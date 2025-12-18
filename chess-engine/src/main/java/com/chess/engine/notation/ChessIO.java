@@ -11,7 +11,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.Scanner;
 
 /**
  * Класс для работы с вводом-выводом шахматных данных
@@ -154,5 +156,16 @@ public class ChessIO {
             }
         }
         return false;
+    }
+
+    /**
+     * Запрашивает путь к файлу у пользователя через консоль
+     * @param test_in Scanner для чтения ввода пользователя
+     * @return Path объект, созданный из введенного пути
+     */
+    public static Path fileQuery(Scanner test_in) {
+        System.out.print("Введите путь к файлу:");
+        String filePath = test_in.nextLine();
+        return Paths.get(filePath);
     }
 }

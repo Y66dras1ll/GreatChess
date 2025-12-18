@@ -12,6 +12,7 @@ class CoordinateTest {
         Coordinate coord = new Coordinate('e', 4);
         assertEquals('e', coord.getFile());
         assertEquals(4, coord.getRank());
+        assertFalse(coord.isEmpty());
     }
 
     @Test
@@ -30,6 +31,17 @@ class CoordinateTest {
         Coordinate coord = new Coordinate("h8");
         assertEquals('h', coord.getFile());
         assertEquals(8, coord.getRank());
+        assertFalse(coord.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Проверка строкового конструктора с двухзначным числом")
+    void testStringConstructorTwoDigitNumber() {
+        Coordinate coord = new Coordinate("j10");
+        assertEquals('j', coord.getFile());
+        assertEquals(10, coord.getRank());
+        assertFalse(coord.isEmpty());
+        assertTrue(coord.isInBoard());
     }
 
     @Test
@@ -38,14 +50,34 @@ class CoordinateTest {
         Coordinate coord = new Coordinate("invalid");
         assertEquals(0, coord.getFile());
         assertEquals(0, coord.getRank());
+        assertTrue(coord.isEmpty());
     }
 
     @Test
-    @DisplayName("Проверка строкового конструктора с трехзначной строкой")
-    void testStringConstructorThreeChars() {
-        Coordinate coord = new Coordinate("j10");
+    @DisplayName("Проверка строкового конструктора с пустой строкой")
+    void testStringConstructorEmptyString() {
+        Coordinate coord = new Coordinate("");
         assertEquals(0, coord.getFile());
         assertEquals(0, coord.getRank());
+        assertTrue(coord.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Проверка строкового конструктора с пробелами")
+    void testStringConstructorWithSpaces() {
+        Coordinate coord = new Coordinate("  e4  ");
+        assertEquals('e', coord.getFile());
+        assertEquals(4, coord.getRank());
+        assertFalse(coord.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Проверка строкового конструктора с координатой вне доски")
+    void testStringConstructorOutOfBounds() {
+        Coordinate coord = new Coordinate("k5");
+        assertEquals(0, coord.getFile());
+        assertEquals(0, coord.getRank());
+        assertTrue(coord.isEmpty());
     }
 
     @Test
@@ -54,6 +86,8 @@ class CoordinateTest {
         Coordinate coord = new Coordinate();
         assertEquals(0, coord.getFile());
         assertEquals(0, coord.getRank());
+        assertTrue(coord.isEmpty());
+        assertFalse(coord.isInBoard());
     }
 
     @Test
@@ -71,20 +105,69 @@ class CoordinateTest {
     }
 
     @Test
-    @DisplayName("Проверка inBoard с валидными координатами")
-    void testInBoardValid() {
+    @DisplayName("Проверка метода getFileIndex")
+    void testGetFileIndex() {
+        Coordinate coordA = new Coordinate('a', 1);
+        assertEquals(0, coordA.getFileIndex());
+
+        Coordinate coordJ = new Coordinate('j', 1);
+        assertEquals(9, coordJ.getFileIndex());
+
+        Coordinate invalid = new Coordinate();
+        assertEquals(-1, invalid.getFileIndex());
+    }
+
+    @Test
+    @DisplayName("Проверка метода getRankIndex")
+    void testGetRankIndex() {
+        Coordinate coord1 = new Coordinate('a', 1);
+        assertEquals(0, coord1.getRankIndex());
+
+        Coordinate coord10 = new Coordinate('a', 10);
+        assertEquals(9, coord10.getRankIndex());
+
+        Coordinate invalid = new Coordinate();
+        assertEquals(-1, invalid.getRankIndex());
+    }
+
+    @Test
+    @DisplayName("Проверка метода isEmpty")
+    void testIsEmpty() {
+        assertTrue(new Coordinate().isEmpty());
+        assertTrue(new Coordinate((char)0, 0).isEmpty());
+        assertTrue(new Coordinate("invalid").isEmpty());
+        assertFalse(new Coordinate('a', 1).isEmpty());
+        assertFalse(new Coordinate("j10").isEmpty());
+    }
+
+    @Test
+    @DisplayName("Проверка метода isInBoard")
+    void testIsInBoard() {
+        assertTrue(new Coordinate('a', 1).isInBoard());
+        assertTrue(new Coordinate('j', 10).isInBoard());
+        assertTrue(new Coordinate('e', 5).isInBoard());
+        assertFalse(new Coordinate().isInBoard());
+        assertFalse(new Coordinate("k5").isInBoard());
+        assertFalse(new Coordinate('a', 11).isInBoard());
+    }
+
+    @Test
+    @DisplayName("Проверка статического метода inBoard с валидными координатами")
+    void testStaticInBoardValid() {
         assertTrue(Coordinate.inBoard(new Coordinate('a', 1)));
         assertTrue(Coordinate.inBoard(new Coordinate('j', 10)));
         assertTrue(Coordinate.inBoard(new Coordinate('e', 5)));
     }
 
     @Test
-    @DisplayName("Проверка inBoard с невалидными координатами")
-    void testInBoardInvalid() {
+    @DisplayName("Проверка статического метода inBoard с невалидными координатами")
+    void testStaticInBoardInvalid() {
         assertFalse(Coordinate.inBoard(new Coordinate('a', 0)));
         assertFalse(Coordinate.inBoard(new Coordinate('k', 5)));
         assertFalse(Coordinate.inBoard(new Coordinate('a', 11)));
         assertFalse(Coordinate.inBoard(new Coordinate('@', 5)));
+        assertFalse(Coordinate.inBoard(new Coordinate()));
+        assertFalse(Coordinate.inBoard(null));
     }
 
     @Test
@@ -99,11 +182,19 @@ class CoordinateTest {
     }
 
     @Test
-    @DisplayName("Проверка метода toString")
-    void testToString() {
+    @DisplayName("Проверка метода toString для валидных координат")
+    void testToStringValid() {
         assertEquals("a1", new Coordinate('a', 1).toString());
         assertEquals("j10", new Coordinate('j', 10).toString());
         assertEquals("e4", new Coordinate('e', 4).toString());
+    }
+
+    @Test
+    @DisplayName("Проверка метода toString для невалидных координат")
+    void testToStringInvalid() {
+        assertEquals("INVALID", new Coordinate().toString());
+        assertEquals("INVALID", new Coordinate("invalid").toString());
+        assertEquals("INVALID", new Coordinate((char)0, 0).toString());
     }
 
     @Test
@@ -113,8 +204,12 @@ class CoordinateTest {
         Coordinate coord2 = new Coordinate('e', 4);
         Coordinate coord3 = new Coordinate('d', 4);
         Coordinate coord4 = new Coordinate('e', 5);
+        Coordinate coord5 = new Coordinate("e4");
+        Coordinate coord6 = new Coordinate("E4");
 
         assertEquals(coord1, coord2);
+        assertEquals(coord1, coord5);
+        assertEquals(coord1, coord6);
         assertNotEquals(coord1, coord3);
         assertNotEquals(coord1, coord4);
         assertEquals(coord1, coord1);
@@ -128,8 +223,10 @@ class CoordinateTest {
         Coordinate coord1 = new Coordinate('e', 4);
         Coordinate coord2 = new Coordinate('e', 4);
         Coordinate coord3 = new Coordinate('d', 4);
+        Coordinate coord4 = new Coordinate("e4");
 
         assertEquals(coord1.hashCode(), coord2.hashCode());
+        assertEquals(coord1.hashCode(), coord4.hashCode());
         assertNotEquals(coord1.hashCode(), coord3.hashCode());
     }
 
@@ -138,6 +235,7 @@ class CoordinateTest {
     void testEmptyCoordinate() {
         assertEquals(0, Coordinate.emptyCoordinate.getFile());
         assertEquals(0, Coordinate.emptyCoordinate.getRank());
+        assertTrue(Coordinate.emptyCoordinate.isEmpty());
         assertFalse(Coordinate.inBoard(Coordinate.emptyCoordinate));
     }
 
@@ -155,7 +253,9 @@ class CoordinateTest {
         for (char file = 'a'; file <= 'j'; file++) {
             for (int rank = 1; rank <= 10; rank++) {
                 Coordinate coord = new Coordinate(file, rank);
-                assertTrue(Coordinate.inBoard(coord));
+                assertTrue(coord.isInBoard(), "Координата " + file + rank + " должна быть на доске");
+                assertEquals(file, coord.getFile());
+                assertEquals(rank, coord.getRank());
             }
         }
     }
@@ -169,8 +269,8 @@ class CoordinateTest {
         assertEquals('e', new Coordinate("E5").getFile());
         assertEquals(5, new Coordinate("E5").getRank());
 
-        assertEquals('j', new Coordinate("j9").getFile());
-        assertEquals(9, new Coordinate("j9").getRank());
+        assertEquals('j', new Coordinate("j10").getFile());
+        assertEquals(10, new Coordinate("j10").getRank());
     }
 
     @Test
@@ -179,7 +279,45 @@ class CoordinateTest {
         Coordinate j10 = new Coordinate('j', 10);
         assertEquals('j', j10.getFile());
         assertEquals(10, j10.getRank());
-        assertTrue(Coordinate.inBoard(j10));
+        assertTrue(j10.isInBoard());
         assertEquals("j10", j10.toString());
+        assertEquals(9, j10.getFileIndex());
+        assertEquals(9, j10.getRankIndex());
+    }
+
+    @Test
+    @DisplayName("Проверка координат с двухзначными числами вне диапазона")
+    void testTwoDigitOutOfRange() {
+        Coordinate coord1 = new Coordinate("a11");
+        assertTrue(coord1.isEmpty());
+        assertEquals("INVALID", coord1.toString());
+
+        Coordinate coord2 = new Coordinate("a0");
+        assertTrue(coord2.isEmpty());
+        assertEquals("INVALID", coord2.toString());
+    }
+
+    @Test
+    @DisplayName("Проверка некорректных форматов строк")
+    void testInvalidStringFormats() {
+        assertTrue(new Coordinate("a").isEmpty());
+
+        assertTrue(new Coordinate("10").isEmpty());
+
+        assertTrue(new Coordinate("1a").isEmpty());
+
+        assertTrue(new Coordinate("a100").isEmpty());
+
+        assertTrue(new Coordinate("@1").isEmpty());
+    }
+
+    @Test
+    @DisplayName("Проверка копирования невалидной координаты")
+    void testCopyInvalidCoordinate() {
+        Coordinate invalid = new Coordinate("invalid");
+        Coordinate copy = new Coordinate(invalid);
+        assertEquals(0, copy.getFile());
+        assertEquals(0, copy.getRank());
+        assertTrue(copy.isEmpty());
     }
 }

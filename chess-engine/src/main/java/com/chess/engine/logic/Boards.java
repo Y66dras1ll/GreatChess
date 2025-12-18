@@ -1,6 +1,6 @@
 package com.chess.engine.logic;
 
-import com.chess.engine.enums.COLOUR;
+import com.chess.engine.enums.*;
 import com.chess.engine.pieces.*;
 
 import java.util.HashMap;
@@ -149,5 +149,77 @@ public class Boards {
         pieces.put(kingW.getCoords(), kingW);
 
         return pieces;
+    }
+
+    /**
+     * Создает разделитель строки для отображения доски
+     * @return строка-разделитель
+     */
+    public static String fancySeparator() {
+
+        String unit = "|====";
+
+        String str = "  " +
+                unit.repeat(10) +
+                "|";
+        return str;
+    }
+
+    /**
+     * Создает отступ для номера строки доски
+     * @param n номер строки
+     * @param type типа "L" для левого отступа, иначе для правого
+     * @return строка с отступом
+     */
+    public static String spacer (int n,String type) {
+        if (type.equals("L"))
+            return n + " ";
+        else
+            return " " + n;
+    }
+
+    /**
+     * Создает заголовок столбцов доски
+     * @return строка с буквами столбцов
+     */
+    public static String fancyColumnIndex() {
+        StringBuilder str = new StringBuilder();
+        str.append("   ");
+        for (char file = 'a'; file <= 'j'; file++) {
+            str.append(" ").append(file).append("   ");
+        }
+
+        return str.toString();
+    }
+
+    /**
+     * Отображает текущее состояние доски
+     * @param pieces объект с фигурами на доске
+     * @return строковое представление доски
+     */
+    public static String displayBoard(Pieces pieces) {
+
+        int dimRank = BOARD.FIRST_RANK.getRankVal();
+        char dimFile = BOARD.FIRST_FILE.getFileVal();
+        char lastFile = BOARD.LAST_FILE.getFileVal();
+
+        StringBuilder str = new StringBuilder();
+
+        str.append(fancyColumnIndex()).append("\n");
+        str.append(fancySeparator()).append("\n");
+        for (int rank = 10; rank >= dimRank; rank--) {
+            str.append(spacer(rank,"L")).append("|");
+            for (char file = dimFile; file <= lastFile; file++) {
+                Coordinate coord = new Coordinate(file,rank);
+                str.append((pieces.getPieces().get(coord) != null)
+                        ? (" " + pieces.getPieces().get(coord).toBoardString() + " |")
+                        : "    |");
+            }
+            str.append(spacer(rank,"R")).append("\n");
+            str.append(fancySeparator()).append("\n");
+        }
+        str.append(fancyColumnIndex()).append("\n");
+
+        return str.toString();
     }
 }
