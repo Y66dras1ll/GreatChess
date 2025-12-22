@@ -30,7 +30,7 @@ public class BoardPanel extends JPanel {
     private final JButton[][] board = new JButton[dimension][dimension];
     private final Color brown = new Color(150, 75, 0);
     private final Color pastel = new Color(255, 222, 173);
-    private final Color intermediate = new Color(255, 255, 153);
+    private final Color intermediate = new Color(200, 202, 103);
     private static final int tileSize = 88;
 
     private final BufferedImage invisible = new BufferedImage(80, 80, BufferedImage.TYPE_INT_ARGB);
