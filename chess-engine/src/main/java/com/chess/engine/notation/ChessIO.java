@@ -30,7 +30,7 @@ public class ChessIO {
      * @param piece фигура, делающая ход
      * @return строковое представление хода
      */
-    public static String moveString (Pieces pieces, Coordinate coordinate, Piece piece) {
+    public static String moveString(Pieces pieces, Coordinate coordinate, Piece piece) {
 
         boolean isCastle = false;
 
@@ -41,21 +41,19 @@ public class ChessIO {
 
         if (piece.getName() != ID.KING) {
             str.append(piece.getName().toString());
-        }
-        else {
+        } else {
             King king = (King) piece;
             King previousKing = (King) previousPiece;
 
             if (coordinate.equals(king.getCastleCoordKingQ()) && previousKing.canCastleQueen(previousBoard)) {
                 str.append("O-O-O");
                 isCastle = true;
-            }
-            else if (coordinate.equals(king.getCastleCoordKingK()) && previousKing.canCastleKing(previousBoard)) {
+            } else if (coordinate.equals(king.getCastleCoordKingK()) && previousKing.canCastleKing(previousBoard)) {
                 str.append("O-O");
                 isCastle = true;
-            }
-            else
+            } else {
                 str.append(piece.getName().toString());
+            }
         }
 
         str.append(removeAmbiguous(previousBoard, coordinate, previousPiece));
@@ -65,9 +63,9 @@ public class ChessIO {
                 assert piece instanceof Pawn;
                 Pawn pawn = (Pawn) piece;
                 str.append(pawn.getPreviousCoordinate().getFile()).append("x");
-            }
-            else
+            } else {
                 str.append("x");
+            }
         }
 
         if (!isCastle) {
@@ -76,14 +74,21 @@ public class ChessIO {
 
         if (piece.getName() == ID.PAWN) {
             Pawn pawn = (Pawn) piece;
-            if (pawn.canPromoteBlack(coordinate) || pawn.canPromoteWhite(coordinate))
-                str.append("=").append(pawn.getPromotedPiece().getName().toString());
+            if (pawn.canPromoteBlack(coordinate) || pawn.canPromoteWhite(coordinate)) {
+                Piece promotedPiece = pawn.getPromotedPiece();
+                if (promotedPiece != null) {
+                    str.append("=").append(promotedPiece.getName().toString());
+                } else {
+                    str.append("=Q");
+                }
+            }
         }
 
-        if (pieces.isMate(COLOUR.not(piece.getColour())))
+        if (pieces.isMate(COLOUR.not(piece.getColour()))) {
             str.append("#");
-        else if (pieces.isCheck(COLOUR.not(piece.getColour())))
+        } else if (pieces.isCheck(COLOUR.not(piece.getColour()))) {
             str.append("+");
+        }
 
         return str.toString();
     }

@@ -2,10 +2,7 @@ package com.chess.engine.logic;
 
 import com.chess.engine.enums.COLOUR;
 import com.chess.engine.enums.ID;
-import com.chess.engine.pieces.Bishop;
-import com.chess.engine.pieces.King;
-import com.chess.engine.pieces.Pawn;
-import com.chess.engine.pieces.Piece;
+import com.chess.engine.pieces.*;
 
 import java.util.*;
 
@@ -437,16 +434,15 @@ public class Pieces {
      * @param coordinate координата назначения
      * @param piece фигура, делающая ход
      */
-    public void makeMove (Coordinate coordinate, Piece piece) {
-
+    public void makeMove(Coordinate coordinate, Piece piece) {
         if (piece.isValidMove(coordinate, piece.getColour())) {
             setPreviousPieces(this.getPieces());
-            isCapture = Move.tileFull(this, coordinate) && Move.isNotTileColour(this,coordinate, piece.getColour());
+            isCapture = Move.tileFull(this, coordinate) && Move.isNotTileColour(this, coordinate, piece.getColour());
+
             if (piece.getName() == ID.KING) {
                 King castleKing = (King) piece;
                 pieceMove(coordinate, castleKing);
-            }
-            else if (piece.getName() == ID.PAWN) {
+            } else if (piece.getName() == ID.PAWN) {
                 Pawn pawn = (Pawn) piece;
 
                 updatePreviousMovePawns();
@@ -456,33 +452,29 @@ public class Pieces {
                 if (pawn.canPromoteBlack(coordinate) || pawn.canPromoteWhite(coordinate)) {
                     Piece toPromote;
 
-                    if (isGUIGame) {
-                        toPromote = pawn.getPromotedPiece();
-                        if (toPromote == null) {
-                            toPromote = pawn.promotionQuery(coordinate);
-                        }
+                    toPromote = pawn.getPromotedPiece();
+
+                    if (toPromote == null) {
+                        toPromote = new Queen(pawn.getColour(), coordinate);
+                        pawn.setPromotedPiece(toPromote);
                     }
-                    else {
-                        toPromote = pawn.promotionQuery(coordinate);
-                    }
+
                     Coordinate pieceCoord = findPiece(piece);
                     addPiece(coordinate, toPromote);
                     pieces.remove(pieceCoord);
-                }
-                else {
+                } else {
                     pieceMove(coordinate, pawn);
                 }
-            }
-            else {
+
+            } else {
                 pieceMove(coordinate, piece);
             }
-        }
-        else
+        } else {
             System.err.println(piece.getName().toFullString() + " не может сделать ход на " + coordinate.toString() + ".");
+        }
 
         gameProgress.add(copyHashMap(pieces));
         updatePotentials();
-
     }
 
     /**
