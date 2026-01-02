@@ -451,13 +451,19 @@ public class Pieces {
 
                 if (pawn.canPromoteBlack(coordinate) || pawn.canPromoteWhite(coordinate)) {
                     Piece toPromote;
-
-                    toPromote = pawn.getPromotedPiece();
-
+                    if (isGUIGame) {
+                        toPromote = pawn.getPromotedPiece();
+                        if (toPromote == null) {
+                            toPromote = pawn.promotionQuery(coordinate);
+                        }
+                    } else {
+                        toPromote = new Queen(pawn.getColour(), coordinate);
+                    }
                     if (toPromote == null) {
                         toPromote = new Queen(pawn.getColour(), coordinate);
-                        pawn.setPromotedPiece(toPromote);
                     }
+
+                    pawn.setPromotedPiece(toPromote);
 
                     Coordinate pieceCoord = findPiece(piece);
                     addPiece(coordinate, toPromote);
@@ -465,7 +471,6 @@ public class Pieces {
                 } else {
                     pieceMove(coordinate, pawn);
                 }
-
             } else {
                 pieceMove(coordinate, piece);
             }

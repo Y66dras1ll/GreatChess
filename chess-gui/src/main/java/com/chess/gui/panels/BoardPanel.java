@@ -28,9 +28,10 @@ public class BoardPanel extends JPanel {
     private final char charFile = (char) (firstFile - 1);
 
     private final JButton[][] board = new JButton[dimension][dimension];
-    private final Color brown = new Color(150, 75, 0);
-    private final Color pastel = new Color(255, 222, 173);
+    private final Color brown = new Color(122, 50, 0);
+    private final Color pastel = new Color(255, 232, 193);
     private final Color intermediate = new Color(200, 202, 103);
+    private final Color intermediateDark = new Color (120, 122, 23);
     private static final int tileSize = 88;
 
     private final BufferedImage invisible = new BufferedImage(80, 80, BufferedImage.TYPE_INT_ARGB);
@@ -156,10 +157,16 @@ public class BoardPanel extends JPanel {
                 int processedRank = rank - firstRank;
                 int processedFile = file - firstFile;
                 Coordinate potentialCoord = new Coordinate(file, rank);
-                if (potentials.contains(potentialCoord))
-                    board[processedRank][processedFile].setBackground(intermediate);
-                else
+                if (potentials.contains(potentialCoord)) {
+                    boolean isDarkSquare = (processedRank + processedFile) % 2 == 0;
+                    if (isDarkSquare) {
+                        board[processedRank][processedFile].setBackground(intermediateDark);
+                    } else {
+                        board[processedRank][processedFile].setBackground(intermediate);
+                    }
+                } else {
                     backgroundSetter(potentialCoord, board[processedRank][processedFile]);
+                }
             }
         }
     }
